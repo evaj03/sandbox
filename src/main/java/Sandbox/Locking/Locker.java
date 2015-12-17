@@ -1,63 +1,42 @@
 package Sandbox.Locking;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 
 public class Locker {
+    private String fileName = "locker.txt";
 
     public static void main(String[] args) {
-
-        File file = new File("filename");
-        file.mkdir();
-        file.setReadable(true);
-        file.setWritable(true);
-        file.setExecutable(true);
-        FileOutputStream in = null;
+        Locker locker = new Locker();
 
         try {
-            in = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
+            locker.lockFile();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void lockFile() throws IOException {
+        RandomAccessFile stream  = new RandomAccessFile(fileName, "rw");
+        FileChannel      channel = stream.getChannel();
+        FileLock         lock    = null;
+
         try {
-            FileLock lock = in.getChannel().lock();
-
-            int x = 0;
-            int y = 3;
-
-            while (x++ < 10) {
-                // Try acquiring the lock without blocking. This method returns
-                // null or throws an exception if the file is already locked.
-                try {
-                    lock = in.getChannel().tryLock();
-                    System.out.println("I have the lock");
-                } catch (OverlappingFileLockException e) {
-                    // File is already locked in this thread or virtual machine
-                    System.out.println("File is locked");
-                }
-
-                if (x >= 10) {
-                    lock.release();
-                    x = 0;
-                    if(--y == 0) {
-                        break;
-                    }
-
-
-                }
-            }
-
-            // Release the lock
-            lock.release();
-
-            // Close the file
-            in.getChannel().close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            lock = channel.tryLock();
+        } catch (final OverlappingFileLockException e) {
+            stream.close();
+            channel.close();
         }
+
+        stream.writeChars("test lock");
+        lock.release();
+
+        stream.close();
+        channel.close();
     }
 }

@@ -5,6 +5,19 @@ import java.util.concurrent.*;
 
 public class CallableTest {
 
+    public static void main(String[] args) {
+        CallableTest c = new CallableTest();
+
+        try {
+            c.testCallableString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void testCallableString() throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
