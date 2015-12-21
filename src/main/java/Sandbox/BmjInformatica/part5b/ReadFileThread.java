@@ -14,7 +14,7 @@ public final class ReadFileThread implements Callable< List< Name > > {
     private final List< Name > names = new ArrayList< Name >( );
 
     public ReadFileThread( String inputFile ) {
-	this.inputFile = inputFile;
+		this.inputFile = inputFile;
     }
 
 
@@ -27,13 +27,13 @@ public final class ReadFileThread implements Callable< List< Name > > {
      */
     @Override
     public final List< Name > call( ) throws IOException {
-	//System.out.println( Thread.currentThread( ).getName( ) + " Start read for Input File = " + inputFile );
-	
-	processFile( );
-	
-	//System.out.println( Thread.currentThread( ).getName( ) + " Finished read for Input File = " + inputFile );
-	
-	return Collections.unmodifiableList( names );
+		//System.out.println( Thread.currentThread( ).getName( ) + " Start read for Input File = " + inputFile );
+
+		processFile( );
+
+		//System.out.println( Thread.currentThread( ).getName( ) + " Finished read for Input File = " + inputFile );
+
+		return Collections.unmodifiableList( names );
     }
 
     
@@ -46,22 +46,22 @@ public final class ReadFileThread implements Callable< List< Name > > {
      * 
      */
     private void processFile( ) throws FileNotFoundException, IOException {
-	// Read and store input
-	try ( BufferedReader in = new BufferedReader( new FileReader( this.inputFile ) ) ) {
-	    String record;
+		// Read and store input
+		try ( BufferedReader in = new BufferedReader( new FileReader( this.inputFile ) ) ) {
+			String record;
 
-	    while ( ( record = in.readLine( ) ) != null ) {
-		parseRecord( record );
-	    }
-	}
-	catch ( FileNotFoundException e ) {
-	    // Catch exception to write to log file.
-	    throw new FileNotFoundException( e.getMessage( ) );
-	}
-	catch ( IOException e ) {
-	    // Catch exception to write to log file.
-	    throw new IOException( e.getMessage( ) );
-	}
+			while ( ( record = in.readLine( ) ) != null ) {
+			parseRecord( record );
+			}
+		}
+		catch ( FileNotFoundException e ) {
+			// Catch exception to write to log file.
+			throw new FileNotFoundException( e.getMessage( ) );
+		}
+		catch ( IOException e ) {
+			// Catch exception to write to log file.
+			throw new IOException( e.getMessage( ) );
+		}
     }
 
     
@@ -75,20 +75,20 @@ public final class ReadFileThread implements Callable< List< Name > > {
      */
     private void parseRecord( final String record ) {
 
-	if ( ! record.isEmpty( ) ) {
-	    String[ ] splitRecord = record.split( "\\s+" );
+		if ( ! record.isEmpty( ) ) {
+			String[ ] splitRecord = record.split( "\\s+" );
 
-	    if ( splitRecord.length == 2 ) {
-		Name name = new Name( );
-		
-		name.setForename( splitRecord[ 0 ] );
-		name.setSurname( splitRecord[ 1 ] );
-		
-		names.add( name );
-	    }
-//	    else {
-//		// Undefined in spec - choosing to ignore for now.
-//	    }
-	}
+			if ( splitRecord.length == 2 ) {
+			Name name = new Name( );
+
+			name.setForename( splitRecord[ 0 ] );
+			name.setSurname( splitRecord[ 1 ] );
+
+			names.add( name );
+			}
+	//	    else {
+	//		// Undefined in spec - choosing to ignore for now.
+	//	    }
+		}
     }
 }
