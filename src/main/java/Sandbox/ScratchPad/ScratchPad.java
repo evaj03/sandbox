@@ -1,25 +1,38 @@
 package Sandbox.ScratchPad;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 /**
  * Created by jonathanevans on 11/12/2015.
  */
 public class ScratchPad {
 
     public static void main(String[] args) {
-        int x = 15;
-        int y;
+        File file = new File(args[0]);
+        RandomAccessFile input = null;
+        String           line  = null;
 
-        y = (x << 2);
-        System.out.println(y);
+        try {
+            input = new RandomAccessFile(file, "r");
 
-
-        byte x1 = 64, y1;
-        y1 = (byte) (x1 << 2);
-        System.out.println(y1);
-
-        byte bob = (byte)257;
-
-        System.out.println(bob);
-
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
